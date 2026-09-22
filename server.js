@@ -170,12 +170,7 @@ app.get(PRIVATE_DATA_PATH, (req, res) => {
   res.redirect('/#' + PRIVATE_DATA_PATH);
 });
 app.get(['/inter.woff2', '/instrument-serif-italic.woff2'], (req, res) => {
-  const fontPath = path.join(__dirname, path.basename(req.path));
-  if (fs.existsSync(fontPath)) {
-    res.sendFile(fontPath);
-  } else {
-    res.status(404).send('Font not found');
-  }
+  res.sendFile(path.join(__dirname, path.basename(req.path)));
 });
 
 // ============ Тарифи Wayro ============
@@ -225,19 +220,13 @@ function persistData() {
 }
 function loadData() {
   try {
-    if (!fs.existsSync(DATA_FILE)) {
-      console.log(`Creating empty data file at ${DATA_FILE}`);
-      fs.writeFileSync(DATA_FILE, JSON.stringify({ orders: [] }, null, 2), 'utf8');
-      return;
-    }
+    if (!fs.existsSync(DATA_FILE)) return;
     const d = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
     (d.orders || []).forEach(o => ORDERS.set(o.orderId || o.id, o));
     // GPS is ephemeral: after restart the driver must send a fresh measurement.
     if (ORDERS.size) console.log(`✓ Loaded ${ORDERS.size} orders from disk`);
   } catch (e) {
-    console.error('Error reading data file:', e.message);
-    console.log(`Recreating empty data file at ${DATA_FILE}`);
-    fs.writeFileSync(DATA_FILE, JSON.stringify({ orders: [] }, null, 2), 'utf8');
+    throw new Error('Could not read order storage. Restore the file before starting the server.');
   }
 }
 loadData();
@@ -356,13 +345,7 @@ async function roadRoute(a, b) {
   if (hit && Date.now() - hit.at < CACHE_TTL) return hit;
 
   const endpoint = (process.env.OSRM_URL || 'https://router.project-osrm.org').replace(/\/+$/, '');
-  let url = `${endpoint}/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=false`;
-  
-  // Add Geoapify authentication if credentials are provided
-  if (process.env.GEOAPIFY_ROUTING_ORG && process.env.GEOAPIFY_ROUTING_ID) {
-    url += `&apiKey=${process.env.GEOAPIFY_API_KEY || ''}`;
-  }
-  
+  const url = `${endpoint}/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=false`;
   const r = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(9000) });
   if (!r.ok) throw new Error('router unavailable');
   const d = await r.json();
@@ -426,6 +409,13 @@ const isAirport = p => safePoint(p) && nearKm(p, PLACES[0]) < 1.8;
 const isPragueCity = p => safePoint(p) && !isAirport(p) && nearKm(p, PLACES[1]) < 6;
 
 // Ціна для одного класу авто
+// Minivan má дегресивну ставку: чим більше км, тим нижча ціна за км.
+function minibusMetered(km) {
+  if (km <= 50) return Math.round(km * 54 / 10) * 10;
+  if (km <= 100) return Math.round(km * 49 / 10) * 10;
+  return Math.round(km * 43 / 10) * 10;
+}
+
 function priceForCar(carKey, ctx) {
   const car = FLEET_TARIFFS[carKey] || FLEET_TARIFFS.sedan;
 
@@ -437,7 +427,9 @@ function priceForCar(carKey, ctx) {
   if (ctx.fixedAirport) return { base: car.base, kind: 'fixed' };
   // Реальні кілометри → лічильник за тарифом
   if (Number.isFinite(ctx.km) && ctx.km > 0) {
-    const metered = Math.round((ctx.km * car.rate) / 10) * 10;
+    const metered = carKey === 'minibus'
+      ? minibusMetered(ctx.km)
+      : Math.round((ctx.km * car.rate) / 10) * 10;
     return { base: Math.max(car.city, metered), kind: 'metered' };
   }
   return { base: car.base, kind: 'unknown' };
@@ -616,7 +608,7 @@ function pragueTimestamp(date, time) {
   return local === time ? instant.getTime() : NaN;
 }
 function bookingError(b) {
-  const caps = { sedan: [4, 3, 1], minibus: [7, 7, 3], mercE: [3, 2, 0], mercV: [7, 7, 2] };
+  const caps = { sedan: [4, 3, 1], minibus: [7, 7, 1], mercE: [3, 2, 0], mercV: [7, 7, 1] };
   if (!b || !Object.hasOwn(caps, b.car) || !['from', 'to', 'long', 'hourly'].includes(b.mode)) return 'Invalid vehicle or trip type.';
   if (!bounded(b.pax, 1, caps[b.car][0]) || !bounded(b.seats, 0, Math.min(b.pax, caps[b.car][2])) || !bounded(b.bagsBig, 0, caps[b.car][1]) || !bounded(b.bagsSmall, 0, 4)) return 'Vehicle capacity exceeded.';
   if (b.bagsBig * 2 + b.bagsSmall + (b.pram ? 2 : 0) > caps[b.car][1] * 2 + 2) return 'Luggage capacity exceeded.';

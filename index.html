@@ -152,7 +152,7 @@
     html[data-theme="light"] .route-price, html[data-theme="light"] .car-price, html[data-theme="light"] .data-money,
     html[data-theme="light"] .quote-btn small { color: #8a6a10; }
     html[data-theme="light"] .car-media { background: var(--panel-2); }
-    html[data-theme="light"] .car-media::after { box-shadow: inset 0 0 0 1px rgba(9,9,11,.08); }
+    html[data-theme="light"] .car-media::after { background: linear-gradient(to top, rgba(255,255,255,.35), transparent); }
     html[data-theme="light"] .car-media img { filter: none; }
     html[data-theme="light"] .mini-car { background: var(--panel-3); }
     html[data-theme="light"] .terminal { box-shadow: var(--shadow); }
@@ -461,7 +461,10 @@
     .route-price small { display: block; color: #827a69; font-size: 10px; font-weight: 400; text-align: right; margin-top: 4px; letter-spacing: 0; }
     .fleet-strip { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; margin-top: 30px; }
     .mini-car { border: 1px solid var(--line-soft); border-radius: 14px; overflow: hidden; background: #11100b; }
-    .mini-car button { display: block; width: 100%; text-align: left; }
+    .mini-car { position: relative; }
+    .mini-car button { display: block; width: 100%; text-align: left; position: relative; }
+    .mini-car button::after { content: ""; position: absolute; left: 0; right: 0; bottom: 48px; height: 56px; background: linear-gradient(to top, rgba(0,0,0,.75), transparent); pointer-events: none; border-radius: 0 0 14px 14px; }
+    html[data-theme="light"] .mini-car button::after { background: linear-gradient(to top, rgba(255,255,255,.4), transparent); }
     .mini-car img { width: 100%; aspect-ratio: 1.55; object-fit: cover; filter: saturate(.72); transition: transform .6s var(--ease), filter .6s; }
     .mini-car:hover img { transform: scale(1.04); filter: saturate(1); }
     .mini-body { padding: 15px; }
@@ -536,7 +539,7 @@
     .car-media { display: block; width: 100%; overflow: hidden; position: relative; background: #16140f; aspect-ratio: 1.75; border-radius: 10px; }
     .car-media img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.66); transition: transform .8s var(--ease),filter .8s; }
     .car-media:hover img { transform: scale(1.045); filter: saturate(.95); }
-    .car-media::after { position: absolute; content: ""; inset: 0; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
+    .car-media::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 28%; border-radius: 10px 10px 0 0; background: linear-gradient(to top, rgba(0,0,0,.82), transparent); pointer-events: none; }
     .car-tag { position: absolute; left: 13px; top: 13px; padding: 6px 11px; border-radius: 30px; background: rgba(8,7,4,.78); backdrop-filter: blur(8px); color: var(--accent); font-size: 10.5px; letter-spacing: .04em; }
     .car-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-top: 18px; }
     .car-top h2 { font-size: 22px; font-weight: 500; letter-spacing: -.04em; }
@@ -1000,8 +1003,8 @@
       <rect width="100%" height="100%" filter="url(#gf)" opacity=".7"/>
     </svg>
   </div>
-  <div class="hero-photo" aria-hidden="true">
-    <img src="https://images.pexels.com/photos/15121199/pexels-photo-15121199.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="" fetchpriority="high" decoding="async">
+    <div class="hero-photo" aria-hidden="true">
+    <img src="https://images.pexels.com/photos/36377060/pexels-photo-36377060.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="" fetchpriority="high" decoding="async">
   </div>
   <div class="page">
     <div class="menu-backdrop" id="backdrop"></div>
@@ -1093,15 +1096,15 @@
       sedan:   { label: 'Sedan',       base: 850,  pax: 4, bags: 3, seats: 1, rate: 34, city: 390, hour: 690,  ico: 'car',
                  model: { cs: 'Škoda Superb nebo obdobný vůz', en: 'Škoda Superb or similar' },
                  img: 'https://images.pexels.com/photos/15194845/pexels-photo-15194845.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200', inside: null },
-      minibus: { label: 'Minibus',     base: 1250, pax: 7, bags: 7, seats: 3, rate: 43, city: 590, hour: 890,  ico: 'van',
-                 model: { cs: 'Sedmimístný minivan', en: 'Seven-seat minivan' },
-                 img: 'https://images.pexels.com/photos/17455625/pexels-photo-17455625.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
+      minibus: { label: 'Minibus',     base: 1250, pax: 7, bags: 7, seats: 1, rate: 43, city: 590, hour: 890,  ico: 'van',
+                 model: { cs: 'Sedmimístný minivan / Mercedes-Benz V-Class', en: 'Seven-seat minivan / Mercedes-Benz V-Class' },
+                 img: 'https://images.pexels.com/photos/36377060/pexels-photo-36377060.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
                  inside: 'https://images.pexels.com/photos/17455632/pexels-photo-17455632.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200' },
       mercE:   { label: 'Mercedes E',  base: 1290, pax: 3, bags: 2, seats: 0, rate: 55, city: 790, hour: 1190, ico: 'car',
                  model: { cs: 'Mercedes-Benz třídy E', en: 'Mercedes-Benz E-Class' },
                  img: 'https://images.pexels.com/photos/19758544/pexels-photo-19758544.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
                  inside: 'https://images.pexels.com/photos/11877387/pexels-photo-11877387.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200' },
-      mercV:   { label: 'Mercedes V',  base: 1790, pax: 7, bags: 7, seats: 2, rate: 65, city: 990, hour: 1490, ico: 'van',
+      mercV:   { label: 'Mercedes V',  base: 1790, pax: 7, bags: 7, seats: 1, rate: 65, city: 990, hour: 1490, ico: 'van',
                  model: { cs: 'Mercedes-Benz třídy V', en: 'Mercedes-Benz V-Class' },
                  img: 'https://images.pexels.com/photos/17455633/pexels-photo-17455633.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
                  inside: 'https://images.pexels.com/photos/17455632/pexels-photo-17455632.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200' }
@@ -1447,7 +1450,7 @@
         <div class="booking-foot">
           <span>${icon('shield')}<span id="quote-note">${fare().kind === 'fixed' ? f.fixed : fare().kind === 'hour' ? f.hourNote : f.est}</span></span>
           <span class="route-info" id="route-info" hidden>${icon('route')}<span id="route-text"></span></span>
-          <div class="foot-right"><span class="note">${f.demo}</span><button class="text-link" type="button" data-a="promo-open">${f.promo}</button></div>
+          <div class="foot-right"><span class="note">${f.demo}</span></div>
         </div>
         <div class="chosen-addresses" id="chosen-addresses" hidden aria-label="${L('Zvolená místa', 'Selected locations')}"></div>
       </section>
@@ -1566,7 +1569,9 @@
       $('#quote-note').textContent =
         q.kind === 'fixed' ? t('f.fixed')
         : q.kind === 'hour' ? t('f.hourNote')
-        : q.kind === 'metered' ? L(`Sazba ${FLEET[S.car].rate} Kč/km podle skutečné trasy.`, `${FLEET[S.car].rate} CZK/km based on the real route.`)
+        : q.kind === 'metered' ? (S.car === 'minibus'
+          ? L('Degresivní sazba: 54 Kč/km do 50 km, 50 Kč/km 50–100 km, 43 Kč/km nad 100 km.', 'Degressive rate: 54 CZK/km up to 50 km, 50 CZK/km 50–100 km, 43 CZK/km over 100 km.')
+          : L(`Sazba ${FLEET[S.car].rate} Kč/km podle skutečné trasy.`, `${FLEET[S.car].rate} CZK/km based on the real route.`))
         : t('f.est');
       $$('#car option').forEach(o => {
         const c = FLEET[o.value];
@@ -1850,7 +1855,7 @@
           <label class="form-field"><span>${L('Počet jízd měsíčně', 'Rides per month')}</span><input class="input" id="biz-n" type="number" min="1" max="999" value="20" required></label>
           <label class="form-field"><span>${L('Vůz', 'Vehicle')}</span><select class="input" id="biz-car">${Object.entries(FLEET).map(([k, c]) => `<option value="${k}" ${k === 'sedan' ? 'selected' : ''}>${c.label}</option>`).join('')}</select></label>
           <p class="note">${L('Vzorová trasa letiště – Praha. Od 20 jízd −8 %, od 60 jízd −15 % (ukázková sazba).', 'Sample route airport – Prague. From 20 rides −8 %, from 60 rides −15 % (demo rate).')}</p>
-          <div class="total-row"><span>${L('Měsíčně přibližně', 'Approx. per month')}</span><strong id="biz-total">${money(20 * 690 * .92)}</strong></div>
+          <div class="total-row"><span>${L('Měsíčně přibližně', 'Approx. per month')}</span><strong id="biz-total">${money(20 * FLEET.sedan.base * .92)}</strong></div>
           <button class="btn btn-solid wide" type="submit">${L('Připravit poptávku', 'Prepare request')} ${icon('arrow')}</button></form></div></section>`;
       bizTotal();
     }
@@ -2385,7 +2390,7 @@
         <p class="sum-det">${dtLbl(S.date, S.time)}<br>${FLEET[S.car].label} · ${t('pax')(S.pax)}${Number.isFinite(q.km) && q.km > 0 ? `<br>${q.km.toFixed(1).replace('.', lang === 'cs' ? ',' : '.')} km${Number.isFinite(q.min) && q.min > 0 ? ` · ${q.min} min` : ''}` : ''}${S.roundtrip ? `<br>${L('Zpět', 'Back')}: ${dtLbl(S.retDate, S.retTime)}` : ''}${meet ? `<br>${meet.t} · ${meet.s}` : ''}</p>
         <div class="pline-wrap"><div class="pline"><span>${S.mode === 'hourly' ? L('Dispozice', 'Hourly hire') : L('Transfer', 'Transfer')}</span><span>${money(q.base)}</span></div>
         ${q.ret ? `<div class="pline"><span>${L('Zpáteční jízda', 'Return ride')}</span><span>${money(q.ret)}</span></div>` : ''}
-        ${S.seats ? `<div class="pline"><span>${L('Autosedačky', 'Child seats')} ×${S.seats}</span><span>${L('zdarma', 'free')}</span></div>` : ''}
+        ${S.seats ? `<div class="pline"><span>${L('Autosedačka', 'Child seat')} ×${S.seats}</span><span>${L('zdarma', 'free')}</span></div>` : ''}
         ${q.disc ? `<div class="pline disc"><span>${L('Sleva', 'Discount')} ${Math.round(S.discount * 100)} %</span><span>−${money(q.disc)}</span></div>` : ''}</div>
         <div class="total-row"><span>${q.kind === 'fixed' ? L('Celkem', 'Total') : L('Odhad', 'Estimate')}</span><strong>${money(q.total)}</strong></div>
         <p class="sum-inc">${L('Cedulka se jménem', 'Name sign')}<br>${L('Autosedačka zdarma', 'Free child seat')}<br>${L('Wi-Fi a voda ve voze', 'Wi-Fi and water on board')}<br>${L('Platba po jízdě při volbě u řidiče', 'Pay after the ride when choosing driver payment')}</p>
@@ -2412,13 +2417,11 @@
         ${counter('bagsSmall', L('Příruční zavazadlo', 'Cabin bag'), L('do 55 cm', 'up to 55 cm'), 4, 'case')}
         <label class="check"><input type="checkbox" name="pram" ${S.pram ? 'checked' : ''}>${L('Vezu kočárek nebo sportovní vybavení', 'I have a pram or sports gear')}</label>
         <span class="s-label">${L('Děti', 'Children')}</span>
-        ${counter('seats', L('Autosedačka', 'Child seat'), L('zdarma', 'free of charge'), Math.min(car.seats, S.pax), 'seat')}
+        ${car.seats === 0 ? `<p class="note">${L('Mercedes E nenabízí autosedačku. Vyberte jiný vůz.', 'Mercedes E does not offer a child seat. Choose another vehicle.')}</p>` : counter('seats', L('Autosedačka (max. 1)', 'Child seat (max. 1)'), L('zdarma', 'free of charge'), Math.min(car.seats, S.pax), 'seat')}
         ${S.seats ? `<label class="form-field" style="margin-top:15px"><span>${L('Typ sedačky', 'Seat type')}</span><select class="input" name="seatType">${Object.entries(SEATS).map(([k, v]) => `<option value="${k}" ${S.seatType === k ? 'selected' : ''}>${v[lang] || v.cs}</option>`).join('')}</select></label>` : ''}
-        ${car.seats === 0 ? `<p class="note">${L('Mercedes E autosedačky nenabízí. Vyberte Sedan, Minibus nebo Mercedes V.', 'Mercedes E offers no child seats. Choose Sedan, Minibus or Mercedes V.')}</p>` : ''}
         ${addressField('stopover', L('Zastávka po cestě (nepovinné)', 'Stop along the way (optional)'), S.stopover || '', '', false)}
         <label class="form-field" style="margin-top:15px"><span>${L('Poznámka pro řidiče', 'Note for the driver')}</span><textarea class="input" name="notes" rows="2" maxlength="400" placeholder="${L('Nadměrné zavazadlo, jiná domluva…', 'Oversized luggage, other agreement…')}">${esc(S.notes)}</textarea></label>
-        <label class="s-label" for="promo">${L('Slevový kód', 'Promo code')}</label><div class="promo-row"><input class="input" id="promo" value="${esc(S.promo)}" placeholder="WAYRO10" maxlength="20"><button class="btn btn-ghost btn-small" type="button" data-a="promo-apply">${L('Použít', 'Apply')}</button></div>
-        <p class="promo-msg" id="promo-msg" role="status">${S.discount ? L(`Sleva ${Math.round(S.discount * 100)} % je aktivní.`, `${Math.round(S.discount * 100)} % discount active.`) : L('Zadej kód kamaráda nebo WAYRO10 – sleva 10 %.', "Enter a friend's code or WAYRO10 – 10 % off.")}</p>
+        <input type="hidden" id="promo" value="${esc(S.promo)}">
         <p class="err" id="co-err" role="alert" hidden></p><div class="d-actions"><button class="btn btn-solid" type="submit">${L('Pokračovat', 'Continue')} ${icon('arrow')}</button></div>` : `
         <label class="form-field"><span>${L('Jméno a příjmení', 'Full name')}</span><input class="input" name="name" value="${esc(S.name)}" minlength="2" maxlength="60" autocomplete="name" required></label>
         <div class="form-grid"><label class="form-field"><span>${L('Telefon', 'Phone')}</span><input class="input" name="phone" type="tel" value="${esc(S.phone)}" placeholder="+420 777 123 456" maxlength="25" autocomplete="tel" required></label>

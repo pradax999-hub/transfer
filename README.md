@@ -1,4 +1,4 @@
-# Wayro: перед публикацией
+# Transfer by Van — перед публикацією
 
 **Актуальное состояние:** можно размещать для тестирования, но готовность к реальным
 заказам ещё не подтверждена. В этой среде не запускались браузер, телефон, SMTP и
@@ -167,13 +167,22 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 ---
 
-## 4. Тарифи Wayro
-| Клас | Аеропорт-Центр | Далекі (CZK/км) |
-|------|---------------|-----------------|
-| Sedan Standard | 850 CZK (36€) | 34 CZK/км |
-| Business Sedan | 1290 CZK (56€) | 55 CZK/км |
-| Minivan Standard | 1250 CZK (54€) | 43 CZK/км |
-| Business Minivan | 1790 CZK (78€) | 65 CZK/км |
+## 4. Тарифи Transfer by Van
+| Клас | Аеропорт-Центр | Далекі |
+|------|---------------|--------|
+| Sedan | 850 CZK | 34 CZK/км |
+| Mercedes E | 1290 CZK | 55 CZK/км |
+| Minivan | 1250 CZK | **Дегресія:** 54 → 50 → 43 CZK/км |
+| Mercedes V | 1790 CZK | 65 CZK/км |
+
+**Дегресивна ставка (мінівен):**
+| Діапазон | Ставка |
+|----------|--------|
+| 0–50 км | 54 CZK/км |
+| 50–100 км | 50 CZK/км |
+| 100+ км | 43 CZK/км |
+
+**Макс. дитяче крісло:** 1 на весь автопарк.
 
 ---
 
@@ -228,10 +237,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 git clone <your-repo>
-cd wayro-backend
+cd <your-repo>
 npm install --production
-pm2 start server.js --name wayro
+pm2 start server.js --name transfer-by-van
 ```
-#   t r a n s f e r  
- #   t r a n s f e r  
- 
