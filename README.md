@@ -232,3 +232,5 @@ cd wayro-backend
 npm install --production
 pm2 start server.js --name wayro
 ```
+#   t r a n s f e r  
+ 
